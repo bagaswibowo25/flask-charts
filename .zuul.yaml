@@ -10,10 +10,22 @@
     name: deploy-helm-chart
     run: playbooks/deploy-chart.yaml
     requires: test
+    group-vars:
+      k8s:
+        namespace: myapp
+        chart-name: flask-web
+        values:
+          image:
+            repository: bagas25/flask-app
+            tag: latest
     nodeset:
       nodes:
         - name: pod-k8s-util
           label: pod-k8s-util
+      groups:
+        - name: k8s
+          nodes:
+            - pod-k8s-util
 
 - project:
     check:
