@@ -1,5 +1,5 @@
 - name: Check if the Helm release is already installed
-  shell: helm list -q --namespace {{ namespace }} | grep -w "{{ chart-name }}" || true
+  shell: helm list -q --namespace {{ namespace }} | grep -w "{{ chart_name }}" || true
   register: helm_release_check
   changed_when: false
 
@@ -34,7 +34,7 @@
      dest: /tmp/helm-chart/output.yaml
 
 - name: Install the Helm chart
-  shell: helm install {{ chart-name }} ./ --create-namespace {{ namespace }} --values output.yaml
+  shell: helm install {{ chart_name }} ./ --create-namespace {{ namespace }} --values output.yaml
   args:
     chdir: /tmp/helm-chart
   when: helm_release_check.stdout == ""

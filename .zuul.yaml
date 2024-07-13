@@ -9,11 +9,10 @@
 - job:
     name: deploy-helm-chart
     run: playbooks/deploy-chart.yaml
-    requires: test
     group-vars:
       k8s:
         namespace: myapp
-        chart-name: flask-web
+        chart_name: flask-web
         values:
           image:
             repository: bagas25/flask-app

@@ -25,6 +25,6 @@
      dest: /tmp/helm-chart/output.yaml
 
 - name: Upgrade the Helm chart
-  shell: helm upgrade {{ chart-name }} ./ --namespace {{ namespace }} --values output.yaml
+  shell: helm upgrade {{ chart_name }} ./ --namespace {{ namespace }} --values output.yaml
   args:
     chdir: /tmp/helm-chart
