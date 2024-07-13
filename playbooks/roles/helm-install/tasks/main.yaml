@@ -34,7 +34,7 @@
     dest: /tmp/helm-chart/output.yaml
 
 - name: Install the Helm chart
-  shell: helm install {{ chart_name }} ./ --create-namespace {{ namespace }} --values output.yaml
+  shell: helm install {{ chart_name }} ./ -n {{ namespace }} --create-namespace --values output.yaml
   args:
     chdir: /tmp/helm-chart
   when: helm_release_check.stdout == ""
