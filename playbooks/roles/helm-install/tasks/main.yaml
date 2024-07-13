@@ -33,23 +33,14 @@
     src: values.yaml.j2
     dest: /tmp/helm-chart/output.yaml
 
-- name: Display the contents of the YAML file
-  command: cat /tmp/helm-chart/output.yaml
-  register: yaml_file_content
-
-- name: Print the contents of the YAML file
-  debug:
-    var: yaml_file_content.stdout
-
 - name: Install the Helm chart
   shell: helm install {{ chart_name }} ./ -n {{ namespace }} --create-namespace --values output.yaml
   args:
     chdir: /tmp/helm-chart
   when: helm_release_check.stdout == ""
-  register: helm_output
-  changed_when: helm_output.rc == 0
+  register: perform_install
 
 - name: Set install flag if helm install was successful
   set_fact:
-    helm_installed: true
-  when: helm_output.rc == 0
+    helm_install: true
+  when: perform_install is not skipped

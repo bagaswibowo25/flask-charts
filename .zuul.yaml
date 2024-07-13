@@ -16,7 +16,7 @@
         values:
           image:
             repository: bagas25/flask-app
-            tag: latest
+            tag: v2
     nodeset:
       nodes:
         - name: pod-k8s-util
