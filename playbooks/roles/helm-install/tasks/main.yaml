@@ -33,14 +33,6 @@
     src: values.yaml.j2
     dest: /tmp/helm-chart/output.yaml
 
-- name: Display the contents of the YAML file
-  command: cat /tmp/helm-chart/output.yaml
-  register: yaml_file_content
-
-- name: Print the contents of the YAML file
-  debug:
-    var: yaml_file_content.stdout
-
 - name: Install the Helm chart
   shell: helm install {{ chart_name }} ./ -n {{ namespace }} --create-namespace --values output.yaml
   args:
