@@ -1,0 +1,31 @@
+---
+- name: Create chart directory
+  file:
+    path: /tmp/helm-chart
+    state: directory
+
+- name: Copy template directory to temporary chart
+  copy:
+    src: "../../../templates/{{ item }}"
+    dst: /tmp/helm-chart/templates/
+  loop:
+    - deployment.yaml
+    - service.yaml
+
+- name: Copy Chart and values
+  copy:
+    src: "../../../{{ item }}"
+    dst: /tmp/helm-chart/
+  loop:
+    - Chart.yaml
+    - values.yaml
+
+- name: Run helm template
+  shell: helm template ./
+  args:
+    chdir: /tmp/helm-chart
+  register: helm_output
+
+- name: Display Helm template output
+  debug:
+    var: helm_output.stdout

@@ -1,0 +1,24 @@
+- job:
+    name: helm-validation
+    run: playbooks/helm-validation.yaml
+    nodeset:
+      nodes:
+        - name: pod-k8s-util
+          label: pod-k8s-util
+
+- job:
+    name: deploy-helm-chart
+    run: playbooks/deploy-chart.yaml
+    requires: test
+    nodeset:
+      nodes:
+        - name: pod-k8s-util
+          label: pod-k8s-util
+
+- project:
+    check:
+      jobs:
+        - helm-validation
+    gate:
+      jobs:
+        - deploy-chart
