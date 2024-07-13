@@ -24,7 +24,7 @@
     src: values.yaml.j2
     dest: /tmp/helm-chart/output.yaml
 
-- name: Upgrade the Helm chart
+- name: Run helm upgrade
   shell: helm upgrade {{ chart_name }} ./ --namespace {{ namespace }} --values output.yaml
   args:
     chdir: /tmp/helm-chart
