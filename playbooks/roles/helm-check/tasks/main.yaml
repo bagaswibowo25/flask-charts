@@ -7,7 +7,7 @@
 - name: Copy template directory to temporary chart
   copy:
     src: "../../../templates/{{ item }}"
-    dst: /tmp/helm-chart/templates/
+    dest: /tmp/helm-chart/templates/
   loop:
     - deployment.yaml
     - service.yaml
@@ -15,7 +15,7 @@
 - name: Copy Chart and values
   copy:
     src: "../../../{{ item }}"
-    dst: /tmp/helm-chart/
+    dest: /tmp/helm-chart/
   loop:
     - Chart.yaml
     - values.yaml
