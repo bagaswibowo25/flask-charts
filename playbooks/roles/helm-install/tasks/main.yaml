@@ -46,8 +46,9 @@
   args:
     chdir: /tmp/helm-chart
   when: helm_release_check.stdout == ""
+  register: perform_install
 
 - name: Set install flag if helm install was successful
   set_fact:
-    helm_installed: true
-  when: helm_release_check.stdout == "{{ chart_name }}"
+    helm_install: true
+  when: perform_install is not skipped
