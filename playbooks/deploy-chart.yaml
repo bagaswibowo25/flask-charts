@@ -1,0 +1,12 @@
+- hosts: all
+  pre_tasks:
+    - name: Set default value for helm_installed
+      set_fact:
+        helm_installed: false
+  roles:
+    - helm-install
+  tasks:
+    - name: Run helm upgrade if chart installed
+      include_role:
+        name: helm-upgrade
+      when: not helm_installed

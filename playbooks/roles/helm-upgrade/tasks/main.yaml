@@ -1,0 +1,30 @@
+- name: Create chart directory
+  file:
+    path: /tmp/helm-chart
+    state: directory
+
+- name: Copy template directory to temporary chart
+  copy:
+    src: "../../../templates/{{ item }}"
+    dest: /tmp/helm-chart/templates/
+  loop:
+    - deployment.yaml
+    - service.yaml
+
+- name: Copy Chart and values
+  copy:
+    src: "../../../{{ item }}"
+    dest: /tmp/helm-chart/
+  loop:
+    - Chart.yaml
+    - values.yaml
+
+- name: Create a YAML file to override values
+  template:
+    src: values.yaml.j2
+    dest: /tmp/helm-chart/output.yaml
+
+- name: Run helm upgrade
+  shell: helm upgrade {{ chart_name }} ./ --namespace {{ namespace }} --values output.yaml
+  args:
+    chdir: /tmp/helm-chart

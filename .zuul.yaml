@@ -1,0 +1,35 @@
+- job:
+    name: helm-validation
+    run: playbooks/helm-validation.yaml
+    nodeset:
+      nodes:
+        - name: pod-k8s-util
+          label: pod-k8s-util
+
+- job:
+    name: deploy-helm-chart
+    run: playbooks/deploy-chart.yaml
+    group-vars:
+      k8s:
+        namespace: myapp
+        chart_name: flask-web
+        values:
+          image:
+            repository: bagas25/flask-app
+            tag: latest
+    nodeset:
+      nodes:
+        - name: pod-k8s-util
+          label: pod-k8s-util
+      groups:
+        - name: k8s
+          nodes:
+            - pod-k8s-util
+
+- project:
+    check:
+      jobs:
+        - helm-validation
+    gate:
+      jobs:
+        - deploy-helm-chart

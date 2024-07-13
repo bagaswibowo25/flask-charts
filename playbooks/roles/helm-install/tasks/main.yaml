@@ -1,0 +1,55 @@
+- name: Check if the Helm release is already installed
+  shell: helm list -q --namespace {{ namespace }} | grep -w "{{ chart_name }}" || true
+  register: helm_release_check
+  changed_when: false
+
+- name: Debug Helm release check result
+  debug:
+    msg: "Helm release check output: {{ helm_release_check.stdout }}"
+
+- name: Create chart directory
+  file:
+    path: /tmp/helm-chart
+    state: directory
+
+- name: Copy template directory to temporary chart
+  copy:
+    src: "../../../templates/{{ item }}"
+    dest: /tmp/helm-chart/templates/
+  loop:
+    - deployment.yaml
+    - service.yaml
+
+- name: Copy Chart and values
+  copy:
+    src: "../../../{{ item }}"
+    dest: /tmp/helm-chart/
+  loop:
+    - Chart.yaml
+    - values.yaml
+
+- name: Create a YAML file to override values
+  template:
+    src: values.yaml.j2
+    dest: /tmp/helm-chart/output.yaml
+
+- name: Display the contents of the YAML file
+  command: cat /tmp/helm-chart/output.yaml
+  register: yaml_file_content
+
+- name: Print the contents of the YAML file
+  debug:
+    var: yaml_file_content.stdout
+
+- name: Install the Helm chart
+  shell: helm install {{ chart_name }} ./ -n {{ namespace }} --create-namespace --values output.yaml
+  args:
+    chdir: /tmp/helm-chart
+  when: helm_release_check.stdout == ""
+  register: helm_output
+  changed_when: helm_output.rc == 0
+
+- name: Set install flag if helm install was successful
+  set_fact:
+    helm_installed: true
+  when: helm_output.rc == 0
