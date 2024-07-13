@@ -21,4 +21,4 @@
         - helm-validation
     gate:
       jobs:
-        - deploy-chart
+        - deploy-helm-chart
