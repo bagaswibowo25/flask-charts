@@ -29,9 +29,9 @@
     - values.yaml
 
 - name: Create a YAML file to override values
-   template:
-     src: values.yaml.j2
-     dest: /tmp/helm-chart/output.yaml
+  template:
+    src: values.yaml.j2
+    dest: /tmp/helm-chart/output.yaml
 
 - name: Install the Helm chart
   shell: helm install {{ chart_name }} ./ --create-namespace {{ namespace }} --values output.yaml
