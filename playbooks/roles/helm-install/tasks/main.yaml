@@ -47,7 +47,6 @@
     chdir: /tmp/helm-chart
   when: helm_release_check.stdout == ""
   register: helm_output
-  changed_when: helm_output.rc == 0
 
 - name: Set install flag if helm install was successful
   set_fact:
